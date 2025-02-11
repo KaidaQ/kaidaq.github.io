@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPU Opcode Execution Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: Consolas, monospace;
+            color: #d63384;
+        }
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        ul li {
+            margin-bottom: 10px;
+        }
+        .opcode-list {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>CPU Opcode Execution Documentation</h1>
+    <p>This document provides an overview of the <code>execute</code> method, which processes various CPU opcodes and performs corresponding operations.</p>
+
+    <h2>List of Opcodes</h2>
+    <div class="opcode-list">
+        <ul>
+            <li><strong>0x00</strong> - NOP (No operation, placeholder)</li>
+            <li><strong>0x76</strong> - HALT (Stop CPU execution)</li>
+            <li><strong>0x78</strong> - LD A, B (Load register B into A)</li>
+            <li><strong>0x02</strong> - LD (BC), A (Load A into memory at address BC)</li>
+            <li><strong>0x79</strong> - LD A, C (Load register C into A)</li>
+            <li><strong>0x7A</strong> - LD A, D (Load register D into A)</li>
+            <li><strong>0x7B</strong> - LD A, E (Load register E into A)</li>
+            <li><strong>0x7C</strong> - LD A, H (Load register H into A)</li>
+            <li><strong>0x7D</strong> - LD A, L (Load register L into A)</li>
+            <li><strong>0x7E</strong> - LD A, (HL) (Load value at memory address HL into A)</li>
+            <li><strong>0x77</strong> - LD (HL), A (Load A into memory at address HL)</li>
+            <li><strong>0x3E</strong> - LD A, (d8) (Load immediate value into A)</li>
+            <li><strong>0xEA</strong> - LD (a16), A (Load A into memory at address a16)</li>
+            <li><strong>0x80</strong> - ADD A, B (Add B to A)</li>
+            <li><strong>0x81</strong> - ADD A, C (Add C to A)</li>
+            <li><strong>0x90</strong> - SUB A, B (Subtract B from A)</li>
+            <li><strong>0x91</strong> - SUB A, C (Subtract C from A)</li>
+            <li><strong>0xA0</strong> - AND A, B (Bitwise AND B with A)</li>
+            <li><strong>0xA9</strong> - XOR A, C (Bitwise XOR C with A)</li>
+            <li><strong>0xB2</strong> - OR A, D (Bitwise OR D with A)</li>
+            <li><strong>0x04</strong> - INC B (Increment B)</li>
+            <li><strong>0x05</strong> - DEC B (Decrement B)</li>
+        </ul>
+    </div>
+
+    <h2>Method: <code>execute(byte opcode)</code></h2>
+    <p>The <code>execute</code> method takes a single byte <code>opcode</code> as input and performs operations based on the value of the opcode. Below is the implementation:</p>
+
+    <pre><code>
+public void execute(byte opcode) {
+    switch(opcode) {
+        // Placeholder instruction
+        case (byte) 0x00: // NOP - No operation (commonly used as a placeholder)
+            System.out.println("NOP executed.");
+            break;
+
+        // CPU stop instructions
+        case (byte) 0x76: // "HALT"
+            System.out.println("Halt instruction executed.");
+            break;
+
+        // Load instructions
+        case (byte) 0x78: // LD A, B
+            A = B;
+            System.out.println("LD A, B executed: A = " + Integer.toHexString(A));
+            break;
+
+        case (byte) 0x02: // LD (BC), A
+            memory.write(getBC(), (byte) A);
+            System.out.println("LD (BC), A executed: (BC) = " + Integer.toHexString(A));
+            break;
+
+        case (byte) 0x79: // LD A, C
+            A = C;
+            System.out.println("LD A, C executed.");
+            break;
+
+        case (byte) 0x7A: // LD A, D
+            A = D;
+            System.out.println("LD A, D executed.");
+            break;
+
+        case (byte) 0x7B: // LD A, E
+            A = E;
+            System.out.println("LD A, E executed.");
+            break;
+
+        case (byte) 0x7C: // LD A, H
+            A = H;
+            System.out.println("LD A, H executed.");
+            break;
+
+        case (byte) 0x7D: // LD A, L
+            A = L;
+            System.out.println("LD A, L executed.");
+            break;
+
+        case (byte) 0x7E: // LD A, (HL)
+            A = memory.read(getHL());
+            System.out.println("LD A, (HL) executed.");
+            break;
+
+        case (byte) 0x77: // LD (HL), A
+            memory.write(getHL(), A);
+            System.out.println("LD (HL), A executed.");
+            break;
+
+        case (byte) 0x3E: // LD A, (d8) - Load immediate value into A (using memory)
+            A = memory.read(PC++);
+            System.out.println("LD A, (d8) executed: A = " + Integer.toHexString(A));
+            break;
+
+        case (byte) 0xEA: // LD (a16), A
+            int addr = (memory.read(PC++) & 0xFF) | ((memory.read(PC++) & 0xFF) << 8);
+            memory.write(addr, (byte) A);
+            System.out.println("LD (a16), A executed: (a16) = " + Integer.toHexString(addr) + ", A = " + Integer.toHexString(A));
+            break;
+
+        // Arithmetic instructions
+        case (byte) 0x80: { // ADD A, B
+            int result = A + B;
+            setFlag(7, (result & 0xFF) == 0);
+            setFlag(6, false);
+            setFlag(5, ((A & 0xF) + (B & 0xF)) > 0xF);
+            setFlag(4, result > 0xFF);
+            A = result & 0xFF;
+            System.out.println("ADD A, B executed: A = " + Integer.toHexString(A));
+            break;
+        }
+
+        case (byte) 0x81: { // ADD A, C
+            int result = A + C;
+            setFlag(7, (result & 0xFF) == 0);
+            setFlag(6, false);
+            setFlag(5, ((A & 0xF) + (C & 0xF)) > 0xF);
+            setFlag(4, result > 0xFF);
+            A = result & 0xFF;
+            System.out.println("ADD A, C executed: A = " + Integer.toHexString(A));
+            break;
+        }
+
+        case (byte) 0x90: // SUB A, B
+            A -= B;
+            System.out.println("SUB A, B executed: A = " + Integer.toHexString(A));
+            break;
+
+        case (byte) 0x91: // SUB A, C
+            A -= C;
+            System.out.println("SUB A, C executed: C = " + Integer.toHexString(A));
+            break;
+
+        // Logical instructions
+        case (byte) 0xA0: // AND A, B
+            A = A & B;
+            System.out.println("AND A, B executed.");
+            break;
+
+        case (byte) 0xA9: // XOR A, C
+            A = A ^ C;
+            System.out.println("XOR A, C executed.");
+            break;
+
+        case (byte) 0xB2: // OR A, D
+            A = A | D;
+            System.out.println("OR A, D");
+            break;
+
+        // Increment / Decrement instructions
+        case (byte) 0x04: // INC B
+            B++;
+            System.out.println("INC B executed: B = " + Integer.toHexString(B));
+            break;
+
+        case (byte) 0x05: // DEC B
+            B--;
+            System.out.println("DEC B executed: B = " + Integer.toHexString(B));
+            break;
+
+        // Default case (unknown opcode)
+        default:
+            System.out.println("Unknown opcode: 0x" + Integer.toHexString(opcode & 0xFF));
+    }
+}
+    </code></pre>
+
+    <h2>Description</h2>
+    <p>The <code>execute</code> method processes a variety of opcodes, including:</p>
+    <ul>
+        <li><strong>Placeholder instructions</strong> (e.g., NOP).</li>
+        <li><strong>CPU stop instructions</strong> (e.g., HALT).</li>
+        <li><strong>Load instructions</strong> (e.g., LD A, B).</li>
+        <li><strong>Arithmetic instructions</strong> (e.g., ADD A, B).</li>
+        <li><strong>Logical instructions</strong> (e.g., AND A, B).</li>
+        <li><strong>Increment/Decrement instructions</strong> (e.g., INC B).</li>
+    </ul>
+    <p>For unknown opcodes, the method outputs a warning message.</p>
+
+    <h2>Usage</h2>
+    <p>This method is typically used in CPU emulation or simulation environments to execute instructions based on their opcodes.</p>
+</body>
+</html>
