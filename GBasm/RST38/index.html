@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Boy CPU Loop</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: black;
+            color: lime;
+            text-align: center;
+            padding: 50px;
+        }
+        .console {
+            border: 3px solid lime;
+            padding: 20px;
+            display: inline-block;
+            text-align: left;
+            width: 80%;
+            overflow: hidden;
+        }
+        .error {
+            color: red;
+        }
+        .looping {
+            animation: glitch 0.1s infinite;
+        }
+        @keyframes glitch {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(2px); }
+            50% { transform: translateX(-2px); }
+            75% { transform: translateX(2px); }
+            100% { transform: translateX(0); }
+        }
+        .cpu-instructions {
+            white-space: pre;
+            font-size: 14px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Game Boy CPU Execution</h1>
+    <div class="console">
+        <p>Game Boy Emulator v1.0</p>
+        <p>Loading ROM...</p>
+        <p>Executing...</p>
+        <pre class="cpu-instructions">
+            LD   SP, $FFFE
+            JP   Start
+            VBlank:
+            PUSH AF
+            PUSH BC
+            PUSH DE
+            PUSH HL
+            CALL UpdateGraphics
+            POP HL
+            POP DE
+            POP BC
+            POP AF
+            RETI
+            Start:
+            CALL InitGame
+            EI
+            HALT
+            Loop:
+            NOP
+            JP Loop
+
+            ; Crash into RST $38
+            Crash:
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+            RST  $38
+        </pre>
+        <button onclick="window.location.reload()">Restart Execution</button>
+    </div>
+</body>
+</html>
