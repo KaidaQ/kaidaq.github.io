@@ -3,226 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CPU Opcode Execution Documentation</title>
+    <title>Game Boy Emulator - Opcode Documentation</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 20px;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
         }
-        h1 {
-            color: #333;
+        h1, h2 {
+            color: #4db6ac;
         }
-        pre {
-            background-color: #f4f4f4;
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+            background-color: #2c2c2c;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px #000;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #333;
+            color: #ddd;
+        }
+        th, td {
             padding: 10px;
+            border: 1px solid #555;
+            text-align: left;
+        }
+        th {
+            background-color: #444;
+        }
+        .code {
+            background-color: #282c34;
+            color: #61dafb;
+            padding: 10px;
+            font-family: monospace;
             border-radius: 5px;
+            text-align: left;
             overflow-x: auto;
         }
-        code {
-            font-family: Consolas, monospace;
-            color: #d63384;
-        }
-        ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        ul li {
-            margin-bottom: 10px;
-        }
-        .opcode-list {
-            background-color: #f9f9f9;
-            padding: 15px;
+        .button {
+            background-color: #4db6ac;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
             border-radius: 5px;
-            margin-bottom: 20px;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #00897b;
         }
     </style>
 </head>
 <body>
-    <h1>CPU Opcode Execution Documentation</h1>
-    <p>This document provides an overview of the <code>execute</code> method, which processes various CPU opcodes and performs corresponding operations.</p>
 
-    <h2>List of Opcodes</h2>
-    <div class="opcode-list">
+    <h1>Game Boy Emulator - Opcode Documentation</h1>
+    <div class="container">
+        <h2>Overview</h2>
+        <p>This page documents the CPU opcode execution in a Game Boy emulator, detailing the handling of various instructions.</p>
+
+        <h2>Interrupt Handling</h2>
+        <p>The Game Boy uses hardware interrupts controlled by the following registers:</p>
         <ul>
-            <li><strong>0x00</strong> - NOP (No operation, placeholder)</li>
-            <li><strong>0x76</strong> - HALT (Stop CPU execution)</li>
-            <li><strong>0x78</strong> - LD A, B (Load register B into A)</li>
-            <li><strong>0x02</strong> - LD (BC), A (Load A into memory at address BC)</li>
-            <li><strong>0x79</strong> - LD A, C (Load register C into A)</li>
-            <li><strong>0x7A</strong> - LD A, D (Load register D into A)</li>
-            <li><strong>0x7B</strong> - LD A, E (Load register E into A)</li>
-            <li><strong>0x7C</strong> - LD A, H (Load register H into A)</li>
-            <li><strong>0x7D</strong> - LD A, L (Load register L into A)</li>
-            <li><strong>0x7E</strong> - LD A, (HL) (Load value at memory address HL into A)</li>
-            <li><strong>0x77</strong> - LD (HL), A (Load A into memory at address HL)</li>
-            <li><strong>0x3E</strong> - LD A, (d8) (Load immediate value into A)</li>
-            <li><strong>0xEA</strong> - LD (a16), A (Load A into memory at address a16)</li>
-            <li><strong>0x80</strong> - ADD A, B (Add B to A)</li>
-            <li><strong>0x81</strong> - ADD A, C (Add C to A)</li>
-            <li><strong>0x90</strong> - SUB A, B (Subtract B from A)</li>
-            <li><strong>0x91</strong> - SUB A, C (Subtract C from A)</li>
-            <li><strong>0xA0</strong> - AND A, B (Bitwise AND B with A)</li>
-            <li><strong>0xA9</strong> - XOR A, C (Bitwise XOR C with A)</li>
-            <li><strong>0xB2</strong> - OR A, D (Bitwise OR D with A)</li>
-            <li><strong>0x04</strong> - INC B (Increment B)</li>
-            <li><strong>0x05</strong> - DEC B (Decrement B)</li>
+            <li><strong>IE (0xFFFF)</strong> - Interrupt Enable Register</li>
+            <li><strong>IF (0xFF0F)</strong> - Interrupt Flag Register</li>
+            <li><strong>IME</strong> - Interrupt Master Enable Flag</li>
         </ul>
+        <p>When an interrupt occurs, the CPU jumps to a specific interrupt vector:</p>
+        <table>
+            <tr>
+                <th>Interrupt</th>
+                <th>Vector</th>
+                <th>Description</th>
+            </tr>
+            <tr><td>VBlank</td><td>0x40</td><td>Triggered once per frame</td></tr>
+            <tr><td>LCD STAT</td><td>0x48</td><td>Triggered on PPU events</td></tr>
+            <tr><td>Timer</td><td>0x50</td><td>Triggered by the system timer</td></tr>
+            <tr><td>Serial</td><td>0x58</td><td>Triggered by serial transfers</td></tr>
+            <tr><td>Joypad</td><td>0x60</td><td>Triggered when a button is pressed</td></tr>
+        </table>
+
+        <h2>Implemented Opcodes</h2>
+        <table>
+            <tr>
+                <th>Opcode</th>
+                <th>Instruction</th>
+                <th>Description</th>
+            </tr>
+            <tr><td>0x00</td><td>NOP</td><td>No operation</td></tr>
+            <tr><td>0x01</td><td>LD BC, d16</td><td>Load 16-bit immediate into BC</td></tr>
+            <tr><td>0x02</td><td>LD (BC), A</td><td>Store A in address BC</td></tr>
+            <tr><td>0x03</td><td>INC BC</td><td>Increment BC</td></tr>
+            <tr><td>0x04</td><td>INC B</td><td>Increment B</td></tr>
+            <tr><td>0x05</td><td>DEC B</td><td>Decrement B</td></tr>
+            <tr><td>0x06</td><td>LD B, d8</td><td>Load 8-bit immediate into B</td></tr>
+            <tr><td>0x0E</td><td>LD C, d8</td><td>Load 8-bit immediate into C</td></tr>
+            <tr><td>0x1A</td><td>LD A, (DE)</td><td>Load memory at DE into A</td></tr>
+            <tr><td>0x76</td><td>HALT</td><td>Stop CPU execution</td></tr>
+            <tr><td>0x78</td><td>LD A, B</td><td>Load register B into A</td></tr>
+            <tr><td>0x3E</td><td>LD A, d8</td><td>Load 8-bit immediate into A</td></tr>
+            <tr><td>0x80</td><td>ADD A, B</td><td>Adds B to A</td></tr>
+            <tr><td>0xA9</td><td>XOR C</td><td>XOR A with C</td></tr>
+            <tr><td>0xC3</td><td>JP nn</td><td>Jumps to a 16-bit address</td></tr>
+            <tr><td>0xCD</td><td>CALL nn</td><td>Calls a subroutine</td></tr>
+            <tr><td>0xD9</td><td>RETI</td><td>Returns from an interrupt</td></tr>
+        </table>
+
+        <h2>Opcode Execution Snippet</h2>
+        <div class="code">
+            <pre>
+case (byte) 0xC3: // JP nn
+    int addr = (memory.read(PC++) & 0xFF) | ((memory.read(PC++) & 0xFF) << 8);
+    PC = addr;
+    System.out.println("JP executed: PC = " + Integer.toHexString(PC));
+    break;
+
+case (byte) 0xD9: // RETI
+    IME = true;
+    PC = (memory.read(SP) & 0xFF) | ((memory.read(SP + 1) & 0xFF) << 8);
+    SP += 2;
+    System.out.println("RETI executed: Returning to PC = " + Integer.toHexString(PC));
+    break;
+            </pre>
+        </div>
+
+        <a class="button" href="opcodes.txt" download>Download Full Opcode List</a>
     </div>
 
-    <h2>Method: <code>execute(byte opcode)</code></h2>
-    <p>The <code>execute</code> method takes a single byte <code>opcode</code> as input and performs operations based on the value of the opcode. Below is the implementation:</p>
-
-    <pre><code>
-public void execute(byte opcode) {
-    switch(opcode) {
-        // Placeholder instruction
-        case (byte) 0x00: // NOP - No operation (commonly used as a placeholder)
-            System.out.println("NOP executed.");
-            break;
-
-        // CPU stop instructions
-        case (byte) 0x76: // "HALT"
-            System.out.println("Halt instruction executed.");
-            break;
-
-        // Load instructions
-        case (byte) 0x78: // LD A, B
-            A = B;
-            System.out.println("LD A, B executed: A = " + Integer.toHexString(A));
-            break;
-
-        case (byte) 0x02: // LD (BC), A
-            memory.write(getBC(), (byte) A);
-            System.out.println("LD (BC), A executed: (BC) = " + Integer.toHexString(A));
-            break;
-
-        case (byte) 0x79: // LD A, C
-            A = C;
-            System.out.println("LD A, C executed.");
-            break;
-
-        case (byte) 0x7A: // LD A, D
-            A = D;
-            System.out.println("LD A, D executed.");
-            break;
-
-        case (byte) 0x7B: // LD A, E
-            A = E;
-            System.out.println("LD A, E executed.");
-            break;
-
-        case (byte) 0x7C: // LD A, H
-            A = H;
-            System.out.println("LD A, H executed.");
-            break;
-
-        case (byte) 0x7D: // LD A, L
-            A = L;
-            System.out.println("LD A, L executed.");
-            break;
-
-        case (byte) 0x7E: // LD A, (HL)
-            A = memory.read(getHL());
-            System.out.println("LD A, (HL) executed.");
-            break;
-
-        case (byte) 0x77: // LD (HL), A
-            memory.write(getHL(), A);
-            System.out.println("LD (HL), A executed.");
-            break;
-
-        case (byte) 0x3E: // LD A, (d8) - Load immediate value into A (using memory)
-            A = memory.read(PC++);
-            System.out.println("LD A, (d8) executed: A = " + Integer.toHexString(A));
-            break;
-
-        case (byte) 0xEA: // LD (a16), A
-            int addr = (memory.read(PC++) & 0xFF) | ((memory.read(PC++) & 0xFF) << 8);
-            memory.write(addr, (byte) A);
-            System.out.println("LD (a16), A executed: (a16) = " + Integer.toHexString(addr) + ", A = " + Integer.toHexString(A));
-            break;
-
-        // Arithmetic instructions
-        case (byte) 0x80: { // ADD A, B
-            int result = A + B;
-            setFlag(7, (result & 0xFF) == 0);
-            setFlag(6, false);
-            setFlag(5, ((A & 0xF) + (B & 0xF)) > 0xF);
-            setFlag(4, result > 0xFF);
-            A = result & 0xFF;
-            System.out.println("ADD A, B executed: A = " + Integer.toHexString(A));
-            break;
-        }
-
-        case (byte) 0x81: { // ADD A, C
-            int result = A + C;
-            setFlag(7, (result & 0xFF) == 0);
-            setFlag(6, false);
-            setFlag(5, ((A & 0xF) + (C & 0xF)) > 0xF);
-            setFlag(4, result > 0xFF);
-            A = result & 0xFF;
-            System.out.println("ADD A, C executed: A = " + Integer.toHexString(A));
-            break;
-        }
-
-        case (byte) 0x90: // SUB A, B
-            A -= B;
-            System.out.println("SUB A, B executed: A = " + Integer.toHexString(A));
-            break;
-
-        case (byte) 0x91: // SUB A, C
-            A -= C;
-            System.out.println("SUB A, C executed: C = " + Integer.toHexString(A));
-            break;
-
-        // Logical instructions
-        case (byte) 0xA0: // AND A, B
-            A = A & B;
-            System.out.println("AND A, B executed.");
-            break;
-
-        case (byte) 0xA9: // XOR A, C
-            A = A ^ C;
-            System.out.println("XOR A, C executed.");
-            break;
-
-        case (byte) 0xB2: // OR A, D
-            A = A | D;
-            System.out.println("OR A, D");
-            break;
-
-        // Increment / Decrement instructions
-        case (byte) 0x04: // INC B
-            B++;
-            System.out.println("INC B executed: B = " + Integer.toHexString(B));
-            break;
-
-        case (byte) 0x05: // DEC B
-            B--;
-            System.out.println("DEC B executed: B = " + Integer.toHexString(B));
-            break;
-
-        // Default case (unknown opcode)
-        default:
-            System.out.println("Unknown opcode: 0x" + Integer.toHexString(opcode & 0xFF));
-    }
-}
-    </code></pre>
-
-    <h2>Description</h2>
-    <p>The <code>execute</code> method processes a variety of opcodes, including:</p>
-    <ul>
-        <li><strong>Placeholder instructions</strong> (e.g., NOP).</li>
-        <li><strong>CPU stop instructions</strong> (e.g., HALT).</li>
-        <li><strong>Load instructions</strong> (e.g., LD A, B).</li>
-        <li><strong>Arithmetic instructions</strong> (e.g., ADD A, B).</li>
-        <li><strong>Logical instructions</strong> (e.g., AND A, B).</li>
-        <li><strong>Increment/Decrement instructions</strong> (e.g., INC B).</li>
-    </ul>
-    <p>For unknown opcodes, the method outputs a warning message.</p>
-
-    <h2>Usage</h2>
-    <p>This method is typically used in CPU emulation or simulation environments to execute instructions based on their opcodes.</p>
 </body>
 </html>
