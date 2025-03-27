@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cloud of Darkness Appears</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-wrapper">
+    <div id="screen-flash" class="hidden"></div>
+    <audio id="flarewave-sfx" src="flarewave.wav"></audio>
+  <div class="background"></div>
+  <div id="enemy-action" class="action-box hidden">FlareWave</div>
+
+<div id="spawn-mask" class="spawn-mask hidden">
+  <img src="cloud-darkness.webp" alt="Cloud of Darkness" class="sprite">
+</div>
+
+<div class="party" id="party-container"></div>
+
+<div class="textbox hidden" id="textbox">
+  <p id="textbox-text"></p>
+</div>
+
+<div id="battle-menu" class="hidden">
+  <div class="enemy-box">
+    <p>DarkCloud</p>
+  </div>
+  <div class="party-box">
+    <p><strong>HP</strong></p>
+    <p>Muuchi      4147/4147</p>
+    <p>Doug        4449/4449</p>
+    <p>Bowie       4074/4074</p>
+    <p>Melfi       3868/3868</p>
+  </div>
+</div>
+
+
+  <!-- Start button triggers everything -->
+  <button id="start-btn">▶ Start</button>
+
+  <!-- Audio files -->
+  <audio id="intro" src="intro.wav"></audio>
+  <audio id="loop" src="loop.wav" loop></audio>
+
+  <!-- JS code -->
+
+</div>
+<script src="script.js"></script>
+</body>
+</html>
