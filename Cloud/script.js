@@ -190,10 +190,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
       const attacker = partySprites[Math.floor(Math.random() * partySprites.length)];
       const rect = attacker.getBoundingClientRect();
+
       const fightBox = document.createElement('div');
       fightBox.className = 'fight-box show';
       fightBox.textContent = 'FIGHT';
       document.body.appendChild(fightBox);
+
+      const hitHurtSfx = document.getElementById('hithurt-sfx');
+      hitHurtSfx.currentTime = 0;  // Reset to start
+      hitHurtSfx.play();
 
       fightBox.style.left = `${rect.left + window.scrollX - 50}px`;
       fightBox.style.top = `${rect.top + window.scrollY - 50}px`;
@@ -336,6 +341,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const flareSfx = document.getElementById('flarewave-sfx');
   const backgroundMusic = document.getElementById('loop');
   const backgroundMusic2 = document.getElementById('intro');
+  const hithurt = document.getElementById('hithurt-sfx');
 
   volumeSlider.addEventListener('input', () => {
     const volume = volumeSlider.value; 
@@ -343,6 +349,7 @@ window.addEventListener('DOMContentLoaded', () => {
     flareSfx.volume = volume; 
     backgroundMusic.volume = volume;
     backgroundMusic2.volume = volume;
+    hithurt.volume = volume;
   });
 
   cureSfx.volume = volumeSlider.value;
