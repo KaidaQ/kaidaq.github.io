@@ -9,6 +9,8 @@
   <div id="game-wrapper">
     <div id="screen-flash" class="hidden"></div>
     <audio id="flarewave-sfx" src="flarewave.wav"></audio>
+    <audio id="cure-sfx" src="cure.wav" preload="auto"></audio>
+
   <div class="background"></div>
   <div id="enemy-action" class="action-box hidden">FlareWave</div>
 
@@ -17,6 +19,10 @@
 </div>
 
 <div class="party" id="party-container"></div>
+<div id="volume-container">
+  <label for="volume-slider">Volume</label>
+  <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
+</div>
 
 <div class="textbox hidden" id="textbox">
   <p id="textbox-text"></p>
@@ -34,17 +40,9 @@
     <p>Melfi       3868/3868</p>
   </div>
 </div>
-
-
-  <!-- Start button triggers everything -->
   <button id="start-btn">▶ Start</button>
-
-  <!-- Audio files -->
   <audio id="intro" src="intro.wav"></audio>
   <audio id="loop" src="loop.wav" loop></audio>
-
-  <!-- JS code -->
-
 </div>
 <script src="script.js"></script>
 </body>

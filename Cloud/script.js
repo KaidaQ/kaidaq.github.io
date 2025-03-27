@@ -82,7 +82,7 @@ window.addEventListener('DOMContentLoaded', () => {
         charIndex++;
         if (charIndex === line.length) {
           clearInterval(interval);
-          setTimeout(onComplete, 300);
+          setTimeout(onComplete, 6500);
         }
       }, speed);
     }
@@ -240,11 +240,16 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   
   
+
   function maybeCastCure3() {
     const hasDevout = partyData.some(p => p.name === 'devout');
     const someoneHurt = partyData.some(p => p.currentHP < p.maxHP);
   
     if (hasDevout && someoneHurt) {
+      const cureSfx = document.getElementById('cure-sfx');
+      cureSfx.currentTime = 0; // Reset audio to start
+      cureSfx.play();
+
       // Display Cure3 box above devout
       const devout = partyData.find(p => p.name === 'devout');
       const rect = devout.sprite.getBoundingClientRect();
@@ -323,4 +328,23 @@ window.addEventListener('DOMContentLoaded', () => {
       loop.play();
     });
   });
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  const volumeSlider = document.getElementById('volume-slider');
+  const cureSfx = document.getElementById('cure-sfx');
+  const flareSfx = document.getElementById('flarewave-sfx');
+  const backgroundMusic = document.getElementById('loop');
+  const backgroundMusic2 = document.getElementById('intro');
+
+  volumeSlider.addEventListener('input', () => {
+    const volume = volumeSlider.value; 
+    cureSfx.volume = volume;  
+    flareSfx.volume = volume; 
+    backgroundMusic.volume = volume;
+    backgroundMusic2.volume = volume;
+  });
+
+  cureSfx.volume = volumeSlider.value;
+  flareSfx.volume = volumeSlider.value;
 });

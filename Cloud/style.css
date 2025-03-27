@@ -38,6 +38,22 @@ body, p, div, span, .textbox, #battle-menu {
     opacity: 0;
   }
 }
+
+#volume-container {
+  position: absolute;
+  bottom: 90%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10; /* Make sure it's above other elements */
+  text-align: center;
+  color: white;
+}
+
+#volume-slider {
+  width: 180px; /* Adjust width as needed */
+}
+
+
 #screen-flash {
   position: absolute;
   top: 0;
