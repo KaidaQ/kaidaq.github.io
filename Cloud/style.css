@@ -278,15 +278,23 @@ body {
   top: 0;
   left: 0;
   height: 100%;
-  width: 200%;
-  animation: scroll-left 8s linear infinite;
+  width: 100%;
+  animation: scroll-left 26s linear infinite;
   z-index: -1;
 }
 
 @keyframes scroll-left {
-  from { transform: translateX(0%); }
-  to   { transform: translateX(-50%); }
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: -100% 0; /* Moves the background to the left */
+  }
+  100% {
+    background-position: 0 0; /* Resets the position back to the start */
+  }
 }
+
 
 .spawn-mask {
   position: absolute;
