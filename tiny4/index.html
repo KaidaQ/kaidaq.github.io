@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>|Tiny-4 CPU|</title>
+  <title>| Tiny-4 CPU |</title>
   <style>
     body {
       margin: 0;
@@ -37,6 +37,7 @@
     }
     .scroll-container {
       margin-left: 200px;
+      margin-top: 60px;
       height: 100vh;
       overflow-y: scroll;
       scroll-snap-type: y mandatory;
@@ -122,9 +123,28 @@
       0% { transform: translateY(-100vh); }
       100% { transform: translateY(100vh); }
     }
+
+    #updates h3:first-of-type {
+      color: #ff66cc;
+    }
   </style>
 </head>
 <body>
+  <header style="
+    position: fixed;
+    top: 0;
+    left: 200px;
+    width: calc(100% - 200px);
+    background: black;
+    color: #00ff88;
+    font-size: 1.5rem;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #00ff88;
+    z-index: 5;
+    font-family: 'Courier New', monospace;
+    ">
+    Tiny-4 Virtual CPU
+  </header>
 
   <nav>
     <a href="#intro">Intro</a>
@@ -134,6 +154,7 @@
     <a href="#opcodes">Opcodes</a>
     <a href="#internals">Internals</a>
     <a href="#inspiration">Inspiration</a>
+    <a href="#updates">Updates</a>
   </nav>
 
   <div class="overlay" id="matrix-overlay"></div>
@@ -215,7 +236,7 @@
         <h2>What It's Based On</h2>
         <p>Tiny-4 draws inspiration from two iconic bytecode systems: CHIP-8 and Game Boy Assembly. While vastly more limited, Tiny-4 takes cues from their structure, instruction style, and design philosophy — distilling them down into something extremely lean and educational.</p>
       
-        <h3>📦 Architecture Comparison</h3>
+        <h3> Architecture Comparison</h3>
         <table>
           <tr><th>Feature</th><th>Tiny-4</th><th>CHIP-8</th><th>Game Boy ASM</th></tr>
           <tr><td>Instruction Size</td><td>2 bytes (opcode + operand)</td><td>2 bytes (single 16-bit opcode)</td><td>1–3 bytes (variable)</td></tr>
@@ -227,7 +248,7 @@
           <tr><td>Instruction Count</td><td>4</td><td>~35</td><td>~500+</td></tr>
         </table>
       
-        <h3>🧠 Philosophical Differences</h3>
+        <h3> Philosophical Differences</h3>
         <ul>
           <li><strong>CHIP-8</strong> is a virtual machine built to teach and enable simple games in the 1970s — it abstracts complexity, but includes timers, graphics, and a full stack for subroutines.</li>
           <li><strong>Game Boy ASM</strong> is real hardware assembly — full control, full chaos. You deal with flags, memory banking, and interrupt vectors like a grown-up.</li>
@@ -238,9 +259,24 @@
           </li>
         </ul>
       
-        <h3>💬 Developer Intent</h3>
+        <h3> Developer Intent</h3>
         <p>Where CHIP-8 encourages visual creativity and the Game Boy invites full-blown hardware mastery, Tiny-4 is a sandbox for bytecode exploration. It's designed to be as dumb as possible, on purpose. It doesn’t try to be useful — it tries to be <em>understandable</em>. Every instruction is visible, every byte matters, and there's no magic under the hood.</p>
         <p>In short: Tiny-4 is what you’d get if a Game Boy and CHIP-8 had a baby… and then left it in a single byte-wide crib with no supervision.</p>
+      </section>
+
+      <section class="section" id="updates">
+        <h2> Updates</h2>
+      
+        <h3>v0.1 – "ADD $03" (May 2025)</h3>
+        <ul>
+          <li>Initial release of Tiny-4!</li>
+          <li>Added base instruction set: <code>LOAD</code>, <code>STORE</code>, <code>ADD</code>, <code>HALT</code>, <code>NOP</code></li>
+          <li>Custom binary format (.t4c)</li>
+          <li>Compiler and disassembler included</li>
+          <li>Hex RAM viewer</li>
+        </ul>
+      
+        <p>Codename: <strong>ADD $03</strong> — because i did not implement any other opcodes :DDD</p>
       </section>
       
   </div>
@@ -268,5 +304,22 @@
       links[index].classList.add('active');
     });
   </script>
+  <footer style="
+    position: fixed;
+    bottom: 0;
+    left: 200px;
+    width: calc(100% - 200px);
+    background: #001a0e;
+    color: #00ff88;
+    font-size: 0.9rem;
+    text-align: right;
+    padding: 0.5rem 1.5rem;
+    border-top: 1px solid #00ff88;
+    z-index: 5;
+    font-family: 'Courier New', monospace;
+  ">
+    Made by <strong>KaidaQ</strong>
+</footer>
+
 </body>
 </html>
