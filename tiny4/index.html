@@ -182,7 +182,7 @@
     <section class="section" id="specs">
       <h2>Specs at a Glance</h2>
       <p><strong>RAM:</strong> 256 bytes (It'll run DOOM with the Tiny-4 Expansion Pak!)</p>
-      <p><strong>Registers:</strong> A (Accumulator), PC (Program Counter)</p>
+      <p><strong>Registers:</strong> A (Accumulator), PC (Program Counter) (More planned) (Not a joke)</p>
       <p><strong>Instruction Length:</strong> 2 bytes (opcode and operand action!)</p>
       <p><strong>Word Size:</strong> 8-bit (small but spicy)</p>
       <p><strong>Fulfillment:</strong> Maybe not...</p>
@@ -205,6 +205,14 @@
         <tr><td>0x01</td><td>LOAD</td><td>01 XX</td><td>Summon a byte from memory address XX into A</td></tr>
         <tr><td>0x02</td><td>STORE</td><td>02 XX</td><td>Calcify A's value into memory address XX</td></tr>
         <tr><td>0x03</td><td>ADD</td><td>03 XX</td><td>Absorb byte from address XX into A like it's EXP</td></tr>
+        <tr><td>0x04</td><td>SUB</td><td>04 XX</td><td>Vaporise byte from address XX into A like it's chalk</td></tr>
+        <tr><td>0x05</td><td>CMP</td><td>05 XX</td><td>Compare value in reg A with XX, sets the zero flag.</td></tr>
+        <tr><td>0x08</td><td>JMP</td><td>08 XX</td><td>Dragoon jump to address XX.</td></tr>
+        <tr><td>0x09</td><td>JZ</td><td>09 XX</td><td>Dragoon jump to address XX, if A <strong>is</strong> zero</td></tr>
+        <tr><td>0x0A</td><td>JNZ</td><td>0A XX</td><td>Dragoon jump to address XX, if A <strong>isn't</strong> zero</td></tr>
+        <tr><td>0x0B</td><td>CALL</td><td>0B XX</td><td>Carefully store the next instruction at address $F0, then jump to address XX</td></tr>
+        <tr><td>0x0C</td><td>RET</td><td>0C XX</td><td>Forcefully set the PC to the instruction stored at address $F0</td></tr>
+        <tr><td>0x0D</td><td>OUT</td><td>0D XX</td><td>Output the data within the byte XX</td></tr>
         <tr><td>0xFF</td><td>HALT</td><td>FF 00</td><td>Power nap for your CPU. Execution ends.</td></tr>
       </table>
     </section>
@@ -267,6 +275,16 @@
 
       <section class="section" id="updates">
         <h2> Updates</h2>
+
+        <h3>v0.2 - "THE BIG JMP" (May 2025)</h3>
+        <ul>
+          <li>Release v0.2 of Tiny-4!</li>
+          <li>Added more instructions: <code>JMP</code>, <code>JZ</code>, <code>JNZ</code>, <code>CALL</code>, <code>RET</code>, <code>OUT</code></li>
+          <li>Housekeeping, clean up and adjust code</li>
+          <li>Removed evil entity haunting peoples computers</li>
+          <a href="https://github.com/KaidaQ/Tiny4/releases/tag/v0.2" style="color: #0f0;">Download from Github!</a>
+        </ul>
+        <p>Codename: <strong>THE BIG JMP</strong> - i consider it a big $08 to working on v0.3 :DDD</p>
       
         <h3>v0.1 – "ADD $03" (May 2025)</h3>
         <ul>
@@ -275,9 +293,10 @@
           <li>Custom binary format (.t4c)</li>
           <li>Compiler and disassembler included</li>
           <li>Hex RAM viewer</li>
+          <a href="https://github.com/KaidaQ/Tiny4/releases/tag/Release" style="color: #0f0;">Download from Github!</a>
         </ul>
       
-        <p>Codename: <strong>ADD $03</strong> — because i did not implement any other opcodes :DDD</p>
+        <p>Codename: <strong>ADD $03</strong> - because i did not implement any other opcodes :DDD</p>
       </section>
       
   </div>
