@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>| Tiny-4 CPU |</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Courier New', monospace;
+      background: black;
+      color: #00ff88;
+      display: flex;
+    }
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 200px;
+      height: 100vh;
+      background: #001a0e;
+      border-right: 1px solid #00ff88;
+      padding-top: 2rem;
+      z-index: 2;
+    }
+    nav a {
+      display: block;
+      color: #00ff88;
+      text-decoration: none;
+      padding: 1rem;
+      border-left: 4px solid transparent;
+      transition: 0.2s ease;
+    }
+    nav a:hover, nav a.active {
+      background: #002d1b;
+      border-left: 4px solid #00ff88;
+    }
+    .scroll-container {
+      margin-left: 200px;
+      margin-top: 60px;
+      height: 100vh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      padding-bottom: 2.5rem;
+    }
+    .section {
+      scroll-snap-align: start;
+      min-height: 100vh;
+      padding: 6rem 4rem;
+      max-width: 960px;
+      margin: 0 auto;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 1s ease forwards;
+    }
+    .section:nth-child(1) { animation-delay: 0s; }
+    .section:nth-child(2) { animation-delay: 0.3s; }
+    .section:nth-child(3) { animation-delay: 0.6s; }
+    .section:nth-child(4) { animation-delay: 0.9s; }
+    .section:nth-child(5) { animation-delay: 1.2s; }
+    .section:nth-child(6) { animation-delay: 1.5s; }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    table {
+      border-collapse: collapse;
+      margin-top: 1rem;
+      width: 100%;
+    }
+
+    th, td {
+      border: 1px solid #00ff88;
+      padding: 0.75rem;
+      text-align: left;
+    }
+
+    .tooltip {
+      border-bottom: 1px dotted #00ff88;
+      cursor: help;
+    }
+
+    ul {
+      margin-top: 0.5rem;
+      margin-bottom: 2rem;
+      padding-left: 1rem;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background: transparent;
+    }
+
+    .matrix {
+      font-size: 18px;
+      white-space: pre;
+      opacity: 0.2;
+      color: #00ff88;
+      position: absolute;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-100vh); }
+      100% { transform: translateY(100vh); }
+    }
+
+    #updates h3:first-of-type {
+      color: #ff66cc;
+    }
+  </style>
+</head>
+<body>
+  <header style="
+    position: fixed;
+    top: 0;
+    left: 200px;
+    width: calc(100% - 200px);
+    background: black;
+    color: #00ff88;
+    font-size: 1.5rem;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #00ff88;
+    z-index: 5;
+    font-family: 'Courier New', monospace;
+    ">
+    Tiny-4 Virtual CPU
+  </header>
+
+  <nav>
+    <a href="#intro">Intro</a>
+    <a href="#why">Why?</a>
+    <a href="#specs">Specs</a>
+    <a href="#memmap">Memory Map</a>
+    <a href="#opcodes">Opcodes</a>
+    <a href="#internals">Internals</a>
+    <a href="#inspiration">Inspiration</a>
+    <a href="#updates">Updates</a>
+  </nav>
+
+  <div class="overlay" id="matrix-overlay"></div>
+
+  <div class="scroll-container">
+    <section class="section" id="intro">
+      <h1><span class="tooltip" title="A minimalist 8-bit virtual CPU with 4 instructions. Probably smarter than your toaster.">Tiny-4 CPU</span> Reference Sheet</h1>
+      <p><em>Tiny-4</em> is a bite-sized 8-bit CPU built for chaos, and nostalgia! With only 256 bytes of RAM and the intellectual capacity of a person watching paint dry, it's perfect for doing crimes (in machine language), teaching people, or moving onto harder things! (time to move to the SFC/SNES now!!!)</p>
+      <p>Programs are compiled into <code>.t4c</code> files — demons of ones and zeroes that whisper rituals to a CPU that cannot even subtract 2. Execution is fast, fearless, and absolutely guaranteed to HALT eventually. <strong>(Don't quote me on this.)</strong> </p>
+    </section>
+
+    <section class="section" id="why">
+      <h2>Why I Made This CPU</h2>
+      <ul>
+        <li>Retro video game mechanics are the backbone of gaming history.</li>
+        <li>assembly is fun</li>
+        <li>256 bytes of dread</li>
+        <li>Simulating hardware in a virutal environment is good to practice programming!!!</li>
+        <li>"can it run doom?"</li>
+        <li><strong>And plenty more reasons why it should of not been made...</strong></li>
+      </ul>
+    </section>
+
+    <section class="section" id="specs">
+      <h2>Specs at a Glance</h2>
+      <p><strong>RAM:</strong> 256 bytes (It'll run DOOM with the Tiny-4 Expansion Pak!)</p>
+      <p><strong>Registers:</strong> A (Accumulator), PC (Program Counter) (More planned) (Not a joke)</p>
+      <p><strong>Instruction Length:</strong> 2 bytes (opcode and operand action!)</p>
+      <p><strong>Word Size:</strong> 8-bit (small but spicy)</p>
+      <p><strong>Fulfillment:</strong> Maybe not...</p>
+    </section>
+
+    <section class="section" id="memmap">
+      <h2>Memory Map</h2>
+      <table>
+        <tr><th>Address Range</th><th>Purpose</th></tr>
+        <tr><td>0x00–0x07</td><td>Reserved for sacred bytes (file metadata)</td></tr>
+        <tr><td>0x08–0xEF</td><td>Your playground. This portion of memory is General Use RAM.</td></tr>
+        <tr><td>0xF0–0xFF</td><td>Reserved / I/O / Divine Intervention</td></tr>
+      </table>
+    </section>
+
+    <section class="section" id="opcodes">
+      <h2>Instruction Set</h2>
+      <table>
+        <tr><th>Opcode</th><th>Mnemonic</th><th>Format</th><th>Description</th></tr>
+        <tr><td>0x01</td><td>LOAD</td><td>01 XX</td><td>Summon a byte from memory address XX into A</td></tr>
+        <tr><td>0x02</td><td>STORE</td><td>02 XX</td><td>Calcify A's value into memory address XX</td></tr>
+        <tr><td>0x03</td><td>ADD</td><td>03 XX</td><td>Absorb byte from address XX into A like it's EXP</td></tr>
+        <tr><td>0x04</td><td>SUB</td><td>04 XX</td><td>Vaporise byte from address XX into A like it's chalk</td></tr>
+        <tr><td>0x05</td><td>CMP</td><td>05 XX</td><td>Compare value in reg A with XX, sets the zero flag.</td></tr>
+        <tr><td>0x08</td><td>JMP</td><td>08 XX</td><td>Dragoon jump to address XX.</td></tr>
+        <tr><td>0x09</td><td>JZ</td><td>09 XX</td><td>Dragoon jump to address XX, if A <strong>is</strong> zero</td></tr>
+        <tr><td>0x0A</td><td>JNZ</td><td>0A XX</td><td>Dragoon jump to address XX, if A <strong>isn't</strong> zero</td></tr>
+        <tr><td>0x0B</td><td>CALL</td><td>0B XX</td><td>Carefully store the next instruction at address $F0, then jump to address XX</td></tr>
+        <tr><td>0x0C</td><td>RET</td><td>0C XX</td><td>Forcefully set the PC to the instruction stored at address $F0</td></tr>
+        <tr><td>0x0D</td><td>OUT</td><td>0D XX</td><td>Output the data within the byte XX</td></tr>
+        <tr><td>0xFF</td><td>HALT</td><td>FF 00</td><td>Power nap for your CPU. Execution ends.</td></tr>
+      </table>
+    </section>
+
+    <section class="section" id="internals">
+      <h2>How It Works (Internals)</h2>
+      <p>The Tiny-4 CPU is a virtual CPU designed with simplicity in mind. At its core, it fetches 2-byte instructions from memory (opcode + operand), decodes them, and executes the logic in a minimal loop.</p>
+      <p>Example disassembly output:</p>
+      <pre><code>00: LOAD $50
+02: STORE $30
+04: ADD  $04
+06: HALT</code></pre>
+      <p>This means:</p>
+      <ul>
+        <li><strong>LOAD $50</strong>: A = RAM[0x50]</li>
+        <li><strong>STORE $30</strong>: RAM[0x30] = A</li>
+        <li><strong>ADD $04</strong>: self.A = (self.A + self.RAM[0x04]) & 0xFF</li>
+        <li><strong>HALT</strong>: Execution stops. Nap time. zzz...</li>
+      </ul>
+      <h3>Scripts Explained</h3>
+      <ul>
+        <li><strong>tiny4.py</strong> — This is the CPU emulator. It defines the RAM, register A, and PC. It fetches, decodes, and executes instructions with <code>step()</code> and loops through the program using <code>run()</code>.</li>
+        <li><strong>tiny4compiler.py</strong> — A compiler that takes an input <code>.bin</code> or a test program, attaches the 8-byte Tiny-4 header, and produces a <code>.t4c</code> file. The header contains magic bytes, version, start address, entry point, program size, and a reserved padding byte.</li>
+        <li><strong>tiny4disassembler.py</strong> — A disassembler that reads a <code>.t4c</code> file, checks for the <code>T4C</code> magic, then steps through the instructions 2 bytes at a time and prints a readable disassembly like <code>ADD $04</code>.</li>
+      </ul>
+      <p>This tiny toolchain allows you to write bytecode, compile it, emulate it, and reverse-engineer it — all while giggling like a gremlin.</p>
+    </section>
+
+    <section class="section" id="inspiration">
+        <h2>What It's Based On</h2>
+        <p>Tiny-4 draws inspiration from two iconic bytecode systems: CHIP-8 and Game Boy Assembly. While vastly more limited, Tiny-4 takes cues from their structure, instruction style, and design philosophy — distilling them down into something extremely lean and educational.</p>
+      
+        <h3> Architecture Comparison</h3>
+        <table>
+          <tr><th>Feature</th><th>Tiny-4</th><th>CHIP-8</th><th>Game Boy ASM</th></tr>
+          <tr><td>Instruction Size</td><td>2 bytes (opcode + operand)</td><td>2 bytes (single 16-bit opcode)</td><td>1–3 bytes (variable)</td></tr>
+          <tr><td>Memory Size</td><td>256 bytes</td><td>4 KB (starts at 0x200)</td><td>Up to 64 KB</td></tr>
+          <tr><td>Registers</td><td>1 (A)</td><td>16 (V0–VF)</td><td>AF, BC, DE, HL, SP, PC + flags</td></tr>
+          <tr><td>Stack Support</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+          <tr><td>Graphics / Display</td><td>No</td><td>Yes (64×32 bitmap)</td><td>Yes (tile/sprite-based)</td></tr>
+          <tr><td>Timer / Sound</td><td>No</td><td>Delay & Sound Timers</td><td>Full APU & Timers</td></tr>
+          <tr><td>Instruction Count</td><td>4</td><td>~35</td><td>~500+</td></tr>
+        </table>
+      
+        <h3> Philosophical Differences</h3>
+        <ul>
+          <li><strong>CHIP-8</strong> is a virtual machine built to teach and enable simple games in the 1970s — it abstracts complexity, but includes timers, graphics, and a full stack for subroutines.</li>
+          <li><strong>Game Boy ASM</strong> is real hardware assembly — full control, full chaos. You deal with flags, memory banking, and interrupt vectors like a grown-up.</li>
+          <li><strong>Tiny-4</strong> says: “What if we tossed out literally everything except memory access and arithmetic?” You get no graphics, no jumps, no stack, no calls. Just raw 8-bit memory, 4 instructions, and one register to rule them all.</li>
+
+          <li>
+            <strong>Atleast, for now...</strong>
+          </li>
+        </ul>
+      
+        <h3> Developer Intent</h3>
+        <p>Where CHIP-8 encourages visual creativity and the Game Boy invites full-blown hardware mastery, Tiny-4 is a sandbox for bytecode exploration. It's designed to be as dumb as possible, on purpose. It doesn’t try to be useful — it tries to be <em>understandable</em>. Every instruction is visible, every byte matters, and there's no magic under the hood.</p>
+        <p>In short: Tiny-4 is what you’d get if a Game Boy and CHIP-8 had a baby… and then left it in a single byte-wide crib with no supervision.</p>
+      </section>
+
+      <section class="section" id="updates">
+        <h2> Updates</h2>
+
+        <h3>v0.2 - "THE BIG JMP" (May 2025)</h3>
+        <ul>
+          <li>Release v0.2 of Tiny-4!</li>
+          <li>Added more instructions: <code>JMP</code>, <code>JZ</code>, <code>JNZ</code>, <code>CALL</code>, <code>RET</code>, <code>OUT</code></li>
+          <li>Housekeeping, clean up and adjust code</li>
+          <li>Removed evil entity haunting peoples computers</li>
+          <a href="https://github.com/KaidaQ/Tiny4/releases/tag/v0.2" style="color: #0f0;">Download from Github!</a>
+        </ul>
+        <p>Codename: <strong>THE BIG JMP</strong> - i consider it a big $08 to working on v0.3 :DDD</p>
+      
+        <h3>v0.1 – "ADD $03" (May 2025)</h3>
+        <ul>
+          <li>Initial release of Tiny-4!</li>
+          <li>Added base instruction set: <code>LOAD</code>, <code>STORE</code>, <code>ADD</code>, <code>HALT</code>, <code>NOP</code></li>
+          <li>Custom binary format (.t4c)</li>
+          <li>Compiler and disassembler included</li>
+          <li>Hex RAM viewer</li>
+          <a href="https://github.com/KaidaQ/Tiny4/releases/tag/Release" style="color: #0f0;">Download from Github!</a>
+        </ul>
+      
+        <p>Codename: <strong>ADD $03</strong> - because i did not implement any other opcodes :DDD</p>
+      </section>
+      
+  </div>
+
+  
+  <script>
+    const charset = ['00','01','02','03','04','FF','A9','F0','8D','EA','FE'];
+    const overlay = document.getElementById('matrix-overlay');
+    for (let i = 0; i < 150; i++) {
+      const span = document.createElement('div');
+      span.className = 'matrix';
+      span.style.left = Math.random() * 100 + 'vw';
+      span.style.animationDuration = (Math.random() * 10 + 5) + 's';
+      span.style.fontSize = (Math.random() * 8 + 8) + 'px';
+      span.innerText = charset[Math.floor(Math.random() * charset.length)];
+      overlay.appendChild(span);
+    }
+
+    const links = document.querySelectorAll('nav a');
+    const sections = document.querySelectorAll('.section');
+    document.querySelector('.scroll-container').addEventListener('scroll', () => {
+      let index = sections.length;
+      while (--index && sections[index].getBoundingClientRect().top > 150) {}
+      links.forEach(link => link.classList.remove('active'));
+      links[index].classList.add('active');
+    });
+  </script>
+  <footer style="
+    position: fixed;
+    bottom: 0;
+    left: 160px;
+    width: calc(100% - 200px);
+    background: #001a0e;
+    color: #00ff88;
+    font-size: 0.9rem;
+    text-align: right;
+    padding: 0.75rem 1.5rem;
+    border-top: 1px solid #00ff88;
+    z-index: 5;
+    font-family: 'Courier New', monospace;
+  ">
+    Made by <strong>KaidaQ</strong>
+</footer>
+</body>
+</html>
