@@ -34,15 +34,17 @@
     img{max-width:100%;display:block}
     a{color:inherit;text-decoration:none}
     .container{width:min(1200px,92%);margin-inline:auto}
-    header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop-filter:blur(12px);box-shadow:0 1px 0 rgba(15,23,42,.08)}
-    .nav{display:flex;align-items:center;justify-content:space-between;padding:.85rem 0}
-    .logo{display:flex;align-items:center;gap:.55rem;font-family:'Space Grotesk',sans-serif;font-weight:700}
-    .logo__mark{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:conic-gradient(from 140deg,var(--teal),var(--clay),var(--teal));color:#fff;font-weight:800}
-    .nav__links{display:flex;gap:1.1rem;font-weight:600}
-    .nav__links a{padding:.3rem .5rem;border-radius:10px}
-    .nav__links a:hover{background:rgba(15,118,110,.1);color:var(--teal)}
+    .pill{display:inline-flex;align-items:center;gap:.45rem;padding:.4rem .8rem;border-radius:999px;font-weight:600;font-size:.9rem}
+    header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);box-shadow:0 1px 0 rgba(15,23,42,.06)}
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:.9rem 0}
+    .logo{display:flex;align-items:center;gap:.65rem;font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacing:.01em}
+    .logo__mark{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:conic-gradient(from 140deg,var(--teal),var(--clay),var(--teal));overflow:hidden;border:1px solid var(--teal)}
+    .logo__mark img{width:100%;height:100%;object-fit:cover;display:block}
+    .nav__links{display:flex;gap:1.2rem;font-weight:600}
+    .nav__links a{padding:.35rem .5rem;border-radius:10px}
+    .nav__links a:hover{background:rgba(15,118,110,.08);color:var(--teal)}
     .nav__cta{display:flex;gap:.6rem}
-    .btn{display:inline-flex;align-items:center;gap:.4rem;border-radius:16px;padding:.85rem 1.15rem;font-weight:700;border:none;cursor:pointer;transition:.2s transform,.2s box-shadow}
+    .btn{display:inline-flex;align-items:center;gap:.5rem;border-radius:14px;padding:.95rem 1.3rem;font-weight:700;border:none;cursor:pointer;transition:.2s transform,.2s box-shadow}
     .btn:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
     .btn--solid{background:linear-gradient(135deg,var(--teal),var(--teal-600));color:#ecfdf3}
     .btn--ghost{border:2px solid var(--teal);color:var(--teal);background:transparent}
@@ -53,8 +55,44 @@
       .nav__links.open{display:flex}
       .nav__cta{display:none}
     }
-    .hero{padding:3rem 0 2.4rem;background:radial-gradient(circle at 10% 20%,rgba(242,159,5,.15),transparent 30%),radial-gradient(circle at 80% 10%,rgba(240,107,59,.1),transparent 34%),linear-gradient(180deg,#fdf9f3 0%,#f3ede3 100%)}
-    .hero__grid{display:grid;grid-template-columns:1.05fr .95fr;gap:2rem;align-items:center}
+    .hero{padding:3rem 0 2.4rem;background:radial-gradient(circle at 10% 20%,rgba(242,159,5,.15),transparent 30%),radial-gradient(circle at 80% 10%,rgba(240,107,59,.1),transparent 34%),linear-gradient(180deg,#fdf9f3 0%,#f3ede3 100%);position:relative;overflow:hidden;isolation:isolate}
+    .hero__bg{
+      position:absolute;
+      inset:-20px;
+      z-index:-2;
+      pointer-events:none;
+    }
+    .hero__bg span{
+      position:absolute;
+      inset:0;
+      background-size:cover;
+      background-position:center;
+      filter:blur(5px);
+      opacity:0;
+      transform:scale(1.06);
+      animation:heroFade 20s infinite ease-in-out;
+    }
+    .hero__bg span:nth-child(1){
+      background-image:url('portfolio-images/IMG-20251017-WA0004.jpg');
+      animation-delay:0s;
+    }
+    .hero__bg span:nth-child(2){
+      background-image:url('portfolio-images/IMG-20251017-WA0027.jpg');
+      animation-delay:6.67s;
+    }
+    .hero__bg span:nth-child(3){
+      background-image:url('portfolio-images/IMG-20251017-WA0059.jpg');
+      animation-delay:13.34s;
+    }
+    .hero__grid{display:grid;grid-template-columns:1.05fr .95fr;gap:2rem;align-items:center;position:relative;z-index:1}
+    .hero__copy{
+      background:rgba(255,255,255,.78);
+      border:1px solid rgba(15,118,110,.2);
+      border-radius:18px;
+      padding:1.4rem 1.6rem;
+      box-shadow:0 12px 30px rgba(15,23,42,.08);
+      backdrop-filter:blur(6px);
+    }
     .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2.5rem,3vw + 1rem,3.7rem);margin:.6rem 0}
     .hero p{color:var(--muted);font-size:1.05rem;margin-bottom:1.1rem}
     .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
@@ -106,6 +144,25 @@
     .footer__grid h4{margin:.2rem 0 .8rem;font-family:'Space Grotesk',sans-serif;color:#fff}
     .footer__grid a{display:block;padding:.2rem 0;color:#d5d9e2}
     .footer__bar{border-top:1px solid rgba(255,255,255,.12);margin-top:1.4rem;padding-top:1rem;text-align:center;font-size:.95rem}
+    .cookie-banner{
+      position:fixed;
+      left:1.2rem;
+      right:1.2rem;
+      bottom:1.2rem;
+      background:rgba(255,255,255,.95);
+      border:1px solid rgba(15,118,110,.2);
+      box-shadow:0 18px 40px rgba(15,23,42,.18);
+      border-radius:16px;
+      padding:.9rem 1.1rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:1rem;
+      z-index:200;
+    }
+    .cookie-banner p{margin:0;color:var(--muted);font-size:.95rem}
+    .cookie-banner button{border:none;border-radius:999px;padding:.45rem .9rem;background:var(--teal);color:#ecfdf3;font-weight:700;cursor:pointer}
+    .cookie-banner.hidden{display:none}
     /* Responsive */
     @media(max-width:1020px){
       .hero__grid{grid-template-columns:1fr}
@@ -121,6 +178,7 @@
       .btn{width:100%;justify-content:center}
       .btn--ghost{width:auto}
       .footer__grid{grid-template-columns:1fr 1fr}
+      .cookie-banner{left:.8rem;right:.8rem;bottom:.8rem;flex-direction:column;align-items:flex-start}
     }
     @media(max-width:520px){
       .stats,.highlights,.gallery{grid-template-columns:1fr}
@@ -130,13 +188,20 @@
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
     .reveal{opacity:0;transform:translateY(32px);transition:opacity .7s ease,transform .7s ease}
     .reveal.show{opacity:1;transform:none}
+    @keyframes heroFade{
+      0%{opacity:0;transform:scale(1.06)}
+      6%{opacity:.32}
+      30%{opacity:.32;transform:scale(1.12)}
+      36%{opacity:0;transform:scale(1.14)}
+      100%{opacity:0;transform:scale(1.14)}
+    }
   </style>
 </head>
 <body>
   <header>
     <nav class="container nav" aria-label="Primary">
       <a class="logo" href="index.html">
-        <span class="logo__mark">E</span>
+        <span class="logo__mark"><img src="paintbrush.png" alt="Paintbrush logo"></span>
         <span>ENOCH Painting</span>
       </a>
       <button class="hamburger" id="hamburger" aria-expanded="false" aria-controls="menu">☰</button>
@@ -147,15 +212,20 @@
         <a href="index.html#contact" role="menuitem">Contact</a>
       </div>
       <div class="nav__cta">
-        <a class="btn btn--ghost" href="index.html#estimate">Book a walkthrough</a>
+        <a class="btn btn--ghost" href="index.html#estimate">Book a Walkthrough</a>
       </div>
     </nav>
   </header>
 
   <main>
     <section class="hero reveal">
+      <div class="hero__bg" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
       <div class="container hero__grid">
-        <div>
+        <div class="hero__copy">
           <span class="badge" style="background:rgba(242,159,5,.15);color:var(--amber)">Project portfolio</span>
           <h1>Spaces revived with precision colour and careful prep.</h1>
           <p>Explore a sampling of interiors, exteriors, and commercial environments painted by our in-house crews. Every project includes detailed prep, premium coatings, and tidy wrap-ups.</p>
@@ -178,7 +248,7 @@
           <div class="frame">
             <img src="portfolio-images/IMG-20251017-WA0002.jpg" alt="Sunlit living room painted warm white">
           </div>
-          <div class="hero__tag">Mississauga · Interior Repaint</div>
+          <div class="hero__tag">· Interior Repaint</div>
         </div>
       </div>
     </section>
@@ -194,7 +264,7 @@
             <img src="portfolio-images/IMG-20251017-WA0004.jpg" alt="Kitchen cabinetry refinished in sage green">
             <div class="highlight__body">
               <span class="badge">Interior · Cabinetry</span>
-              <h3>Rosedale kitchen refresh</h3>
+              <h3>Kitchen Refresh</h3>
               <p>Removed previous lacquer, primed with shellac, and sprayed a durable satin finish with new hardware.</p>
             </div>
           </article>
@@ -202,7 +272,8 @@
             <img src="portfolio-images/IMG-20251017-WA0059.jpg" alt="Modern condo hallway with accent wall">
             <div class="highlight__body">
               <span class="badge" style="background:rgba(15,118,110,.1);color:var(--teal)">Commercial</span>
-              <h3>King West office revamp</h3>
+              <h3>Unit Revamp
+              </h3>
               <p>Scheduled after-hours to prime, paint accent zones, and refresh baseboards without interrupting staff.</p>
             </div>
           </article>
@@ -210,7 +281,7 @@
             <img src="portfolio-images/IMG-20251017-WA0027.jpg" alt="Two-storey home exterior with black trim">
             <div class="highlight__body">
               <span class="badge" style="background:rgba(240,107,59,.14);color:var(--clay)">Exterior</span>
-              <h3>Oakville exterior detail</h3>
+              <h3>Exterior Roofing</h3>
               <p>Power washed, repaired wood rot, and coated siding + shutters with a UV-resistant satin finish.</p>
             </div>
           </article>
@@ -328,39 +399,45 @@
     </div>
   </div>
 
-  <footer aria-labelledby="footerHeading">
-    <div class="container footer__grid">
-      <div>
-        <h4 id="footerHeading">ENOCH Painting</h4>
-        <p>Meticulous prep, premium finishes, and friendly communication across the GTA.</p>
-        <p style="margin-top:.6rem">Toronto, Ontario</p>
-        <p><strong>Phone:</strong> <a href="tel:+16135557803">(613) 555-7803</a></p>
-        <p><strong>Email:</strong> <a href="mailto:info@enochpainting.com">info@enochpainting.com</a></p>
-      </div>
-      <div>
-        <h4>Explore</h4>
-        <a href="index.html">Home</a>
-        <a href="index.html#services">Services</a>
-        <a href="#galleryHeading">Gallery</a>
-        <a href="#caseStudy">Case study</a>
-      </div>
-      <div>
-        <h4>Resources</h4>
-        <a href="index.html#process">Process</a>
-        <a href="index.html#reviews">Reviews</a>
-        <a href="index.html#estimate">Book estimate</a>
-        <a href="#">Insurance & warranty</a>
-      </div>
-      <div>
-        <h4>Hours</h4>
-        <p>Mon–Sun: 8 AM – 5 PM</p>
-        <p style="margin-top:.6rem"><span class="badge" style="background:rgba(15,118,110,.15);color:var(--teal)">WSIB · Fully insured</span></p>
-      </div>
+  <footer id="contact" aria-labelledby="footerHeading">
+  <div class="container footer__grid">
+    <div>
+      <h4 id="footerHeading">ENOCH Painting</h4>
+      <p>Bringing colour to life.</p>
+      <p style="margin-top:.6rem">Australia, Sydney</p>
+      <p><strong>Phone:</strong> <a>Peter : 0413 578 198</a></p>
+      <p><strong>Phone:</strong> <a>Davor : 0418 878 807</a></p>
+      <p><strong>Email:</strong> <a href="mailto:enochpaintinggroup@gmail.com">enochpaintinggroup@gmail.com</a></p>
     </div>
-    <div class="footer__bar">
-      © <span id="year"></span> ENOCH Painting. All rights reserved.
+    <div>
+      <h4>Services</h4>
+      <a href="index.html#interior">Interior painting</a>
+      <a href="index.html#exterior">Exterior painting</a>
+      <a href="index.html#commercial">Commercial</a>
     </div>
+    <div>
+      <h4>Company</h4>
+      <a href="index.html#about">About</a>
+      <a href="index.html#reviews">Reviews</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="index.html#estimate">Free estimate</a>
+      <a href="#">Insurance & warranty</a>
+    </div>
+    <div>
+      <h4>Hours</h4>
+      <p>Mon-Sun: 8:00 AM - 5:00 PM</p>
+      <p style="margin-top:.6rem"><span class="pill" style="background:rgba(15,118,110,.15);color:var(--teal)">WSIB &amp; Fully insured</span></p>
+    </div>
+  </div>
+  <div class="footer__bar">
+    Ac <span id="year"></span> ENOCH Painting. All rights reserved.
+  </div>
   </footer>
+
+  <div class="cookie-banner hidden" id="cookieBanner" role="dialog" aria-live="polite" aria-label="Cookie notice">
+    <p>This website uses cookies to improve your experience.</p>
+    <button type="button" id="cookieAccept">Got it</button>
+  </div>
 
   <script>
     const btn = document.getElementById('hamburger');
@@ -368,6 +445,24 @@
     btn?.addEventListener('click', () => {
       const open = menu.classList.toggle('open');
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+
+    const setCookie = (name, value, days) => {
+      const expires = new Date(Date.now() + days * 864e5).toUTCString();
+      document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+    };
+    const getCookie = (name) => {
+      return document.cookie.split('; ').find(row => row.startsWith(`${name}=`))?.split('=')[1];
+    };
+
+    const cookieBanner = document.getElementById('cookieBanner');
+    const cookieAccept = document.getElementById('cookieAccept');
+    if (!getCookie('cookieAccepted')) {
+      cookieBanner?.classList.remove('hidden');
+    }
+    cookieAccept?.addEventListener('click', () => {
+      setCookie('cookieAccepted','true', 365);
+      cookieBanner?.classList.add('hidden');
     });
 
     const filters = document.querySelectorAll('.filter-btn');
@@ -442,3 +537,4 @@
   </script>
 </body>
 </html>
+
